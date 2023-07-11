@@ -34,8 +34,8 @@ public class User extends BaseEntity {
     @Column(name = "birthday")
     private LocalDate birthday;
 
-    @Column(name = "address")
-    private String address;
+    @Column(name = "addr")
+    private String addr;
 
     @Column(name = "tel")
     private String tel;

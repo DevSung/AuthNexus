@@ -23,5 +23,9 @@ public class UserController {
         return ResponseEntity.ok(userService.addUser(signUpRequest));
     }
 
+    @GetMapping("")
+    public ResponseEntity<Object> getUsers() {
+        return ResponseEntity.ok(userService.getUsers());
+    }
 
 }
