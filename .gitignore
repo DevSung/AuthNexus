@@ -24,11 +24,11 @@ bin/
 *.iml
 *.ipr
 *.yml
-/build.sh
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
-
+# .sh files
+*.sh
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
