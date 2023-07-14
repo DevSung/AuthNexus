@@ -20,14 +20,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-
                 // HttpBasic 비활성화
                 .httpBasic().disable()
-
                 // csrf 비활성화 (이유는 아래 참고)
                 .csrf().disable()
                 .cors().and()
-
                 // 인증 없이도 접근이 가능
                 .authorizeRequests()
                 .antMatchers(
@@ -35,7 +32,6 @@ public class SecurityConfig {
                         "/api/member/login",
                         "/api/member/sign-up",
                         "/swagger-ui/**").permitAll()
-
                 // 권한("USER")이 필요한 서비스
                 .antMatchers("/api/**").hasRole("USER")
 

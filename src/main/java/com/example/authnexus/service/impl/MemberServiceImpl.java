@@ -71,8 +71,6 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public JwtToken login(LoginRequest loginRequest) {
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginRequest.getUserId(), loginRequest.getPassword());
 
         Member member = memberRepository.findByUserId(loginRequest.getUserId()).orElseThrow(() -> {
             throw new UsernameNotFoundException("userId not found");
@@ -82,9 +80,7 @@ public class MemberServiceImpl implements MemberService {
             throw new UsernameNotFoundException("비밀번호가 일치하지 않습니다.");
         }
 
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-
-        return jwtTokenProvider.generateToken(authentication);
+        return jwtTokenProvider.generateToken(member);
     }
 
 }

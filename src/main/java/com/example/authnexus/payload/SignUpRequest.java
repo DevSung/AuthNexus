@@ -20,6 +20,8 @@ public class SignUpRequest {
 
     private String email;
 
+    private String name;
+
     private String gender;
 
     private LocalDate birthday;
@@ -33,6 +35,7 @@ public class SignUpRequest {
                 .userId(this.userId)
                 .password(encoderPassword)
                 .email(this.email)
+                .name(this.name)
                 .gender(this.gender)
                 .birthday(this.birthday)
                 .addr(this.addr)

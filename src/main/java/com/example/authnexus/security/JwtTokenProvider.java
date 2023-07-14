@@ -1,5 +1,7 @@
 package com.example.authnexus.security;
 
+import com.example.authnexus.domain.Member;
+import com.example.authnexus.domain.MemberRole;
 import com.example.authnexus.payload.JwtToken;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -34,17 +36,16 @@ public class JwtTokenProvider {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public JwtToken generateToken(Authentication authentication) {
-        String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
+    public JwtToken generateToken(Member member) {
+
+        String authorities = member.getRoles().stream().map(MemberRole::getRole).collect(Collectors.joining(","));
 
         long now = (new Date()).getTime();
 
         // Access Token 생성
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
         String accessToken = Jwts.builder()
-                .setSubject(authentication.getName())
+                .setSubject(member.getUserId())
                 .claim("auth", authorities)
                 .setExpiration(accessTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS512)

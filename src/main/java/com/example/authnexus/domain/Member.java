@@ -28,6 +28,9 @@ public class Member extends BaseEntity {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "name")
+    private String name;
+
     @Column(name = "gender")
     private String gender;
 
