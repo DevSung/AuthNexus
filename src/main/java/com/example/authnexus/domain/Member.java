@@ -4,15 +4,15 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "user", schema = "user")
-public class User extends BaseEntity {
+@Table(name = "member", schema = "user")
+public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,4 +39,7 @@ public class User extends BaseEntity {
 
     @Column(name = "tel")
     private String tel;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "member")
+    private List<MemberRole> roles;
 }

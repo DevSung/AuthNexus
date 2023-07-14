@@ -27,9 +27,11 @@ bin/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+
 # .sh files
 *.sh
-### NetBeans ###
+
+### NetBeans ###ll
 /nbproject/private/
 /nbbuild/
 /dist/
