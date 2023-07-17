@@ -31,9 +31,10 @@ public class SecurityConfig {
                         "/api/member/", // test api
                         "/api/member/login",
                         "/api/member/sign-up",
+                        "/api/auth/token",
                         "/swagger-ui/**").permitAll()
                 // 권한("USER")이 필요한 서비스
-                .antMatchers("/api/**").hasRole("USER")
+                .antMatchers("/api/**").hasAuthority("USER")
 
                 // 세션을 사용하지 않겠음
                 .and()

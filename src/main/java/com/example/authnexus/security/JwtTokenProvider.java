@@ -64,9 +64,9 @@ public class JwtTokenProvider {
                 .build();
     }
 
-    public Authentication getAuthentication(String accessToken) {
+    public Authentication getAuthentication(String token) {
         // 토큰 복호화
-        Claims claims = parseClaims(accessToken);
+        Claims claims = parseClaims(token);
 
         if (claims.get("auth") == null) {
             throw new RuntimeException("권한 정보가 없는 토큰입니다.");
@@ -81,7 +81,7 @@ public class JwtTokenProvider {
         // UserDetails 객체를 만들어서 Authentication 리턴
         UserDetails principal = new User(claims.getSubject(), "", authorities);
 
-        return new UsernamePasswordAuthenticationToken(principal, "", authorities);
+        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }
 
     public boolean validateToken(String token) {

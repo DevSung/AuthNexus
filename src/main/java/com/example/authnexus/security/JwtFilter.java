@@ -1,27 +1,28 @@
 package com.example.authnexus.security;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
-import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Slf4j
 @RequiredArgsConstructor
-public class JwtFilter extends GenericFilterBean {
+public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         // 1. Request Header 에서 JWT 토큰 추출
-        String token = resolveToken((HttpServletRequest) request);
+        String token = resolveToken(request);
 
         // 2. validateToken 으로 토큰 유효성 검사
         if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
