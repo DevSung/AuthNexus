@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class SwaggerConfig {
-
+    // 주소: http://localhost:8003/swagger-ui/index.html
     @Bean
     protected OpenAPI customOpenAPI() {
         return new OpenAPI()

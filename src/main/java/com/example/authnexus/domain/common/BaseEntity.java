@@ -1,4 +1,4 @@
-package com.example.authnexus.domain;
+package com.example.authnexus.domain.common;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;

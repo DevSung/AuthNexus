@@ -1,4 +1,4 @@
-package com.example.authnexus.domain;
+package com.example.authnexus.domain.member;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

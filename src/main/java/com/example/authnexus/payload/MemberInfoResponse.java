@@ -1,6 +1,6 @@
 package com.example.authnexus.payload;
 
-import com.example.authnexus.domain.Member;
+import com.example.authnexus.domain.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

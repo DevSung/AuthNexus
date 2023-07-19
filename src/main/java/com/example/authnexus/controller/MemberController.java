@@ -19,7 +19,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @Operation(summary = "회원가입")
-    @PostMapping("")
+    @PostMapping("/join")
     public ResponseEntity<Object> addUser(@RequestBody SignUpRequest signUpRequest) {
         return ResponseData.success(memberService.addUser(signUpRequest));
     }

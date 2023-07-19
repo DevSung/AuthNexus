@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -16,6 +16,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -28,18 +30,23 @@ public class SecurityConfig {
                 // 인증 없이도 접근이 가능
                 .authorizeRequests()
                 .antMatchers(
-                        "/api/member/", // test api
                         "/api/member/login",
-                        "/api/member/sign-up",
+                        "/api/member/join",
                         "/api/auth/token",
                         "/swagger-ui/**").permitAll()
-                // 권한("USER")이 필요한 서비스
+                // 권한("USER")이 필요한 서비스, hasRole은 자동으로 권한 앞에 "ROLE_" Prefix 해줌
+                // hasAuthority() -> db값 그대로 equal 비교
                 .antMatchers("/api/**").hasAuthority("USER")
 
                 // 세션을 사용하지 않겠음
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
+                .and()
+                .exceptionHandling()
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .accessDeniedHandler(jwtAccessDeniedHandler)
 
                 // JwtFilter 사용하겠다고 선언
                 .and()
@@ -48,12 +55,12 @@ public class SecurityConfig {
     }
 
     @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public Argon2PasswordEncoder passwordEncoder() {
+        return new Argon2PasswordEncoder();
     }
 
     public boolean match(String password, String memberPassword) {
-        BCryptPasswordEncoder encoder = passwordEncoder();
+        Argon2PasswordEncoder encoder = passwordEncoder();
         return encoder.matches(password, memberPassword);
     }
 

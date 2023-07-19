@@ -1,17 +1,15 @@
 package com.example.authnexus.payload;
 
-import com.example.authnexus.domain.Member;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class SignUpRequest {
 
     private String userId;
@@ -30,17 +28,13 @@ public class SignUpRequest {
 
     private String tel;
 
-    public Member signUp(String encoderPassword) {
-        return Member.builder()
-                .userId(this.userId)
-                .password(encoderPassword)
-                .email(this.email)
-                .name(this.name)
-                .gender(this.gender)
-                .birthday(this.birthday)
-                .addr(this.addr)
-                .tel(this.tel)
-                .build();
+    private List<Roles> rolesList;
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Roles {
+        private String role;
     }
 
 }

@@ -1,5 +1,6 @@
-package com.example.authnexus.domain;
+package com.example.authnexus.domain.member;
 
+import com.example.authnexus.domain.common.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -43,6 +44,6 @@ public class Member extends BaseEntity {
     @Column(name = "tel")
     private String tel;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "member")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.ALL)
     private List<MemberRole> roles;
 }
