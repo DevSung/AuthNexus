@@ -3,14 +3,14 @@ package com.example.authnexus.service.impl;
 
 import com.example.authnexus.domain.member.Member;
 import com.example.authnexus.domain.member.MemberRole;
+import com.example.authnexus.domain.member.repository.MemberRepository;
+import com.example.authnexus.domain.member.repository.MemberRoleRepository;
 import com.example.authnexus.exception.ApiResponseException;
 import com.example.authnexus.exception.ExceptionCode;
 import com.example.authnexus.payload.JwtToken;
 import com.example.authnexus.payload.LoginRequest;
 import com.example.authnexus.payload.MemberInfoResponse;
 import com.example.authnexus.payload.SignUpRequest;
-import com.example.authnexus.domain.member.repository.MemberRepository;
-import com.example.authnexus.domain.member.repository.MemberRoleRepository;
 import com.example.authnexus.security.JwtTokenProvider;
 import com.example.authnexus.security.SecurityConfig;
 import com.example.authnexus.service.MemberService;
@@ -110,11 +110,21 @@ public class MemberServiceImpl implements MemberService {
             throw new ApiResponseException(ExceptionCode.ERROR_NOT_FOUND, "아이디가 일치하지 않습니다.");
         });
 
-        if (!securityConfig.match(loginRequest.getPassword(), member.getPassword())) {
+        if (!securityConfig.passwordEncoder().matches(loginRequest.getPassword(), member.getPassword())) {
             throw new ApiResponseException(ExceptionCode.ERROR_NOT_FOUND, "비밀번호가 일치하지 않습니다.");
         }
 
         return jwtTokenProvider.generateToken(member);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public MemberInfoResponse getUser(Long idx) {
+        Member member = memberRepository.findById(idx).orElseThrow(() -> {
+            throw new ApiResponseException(ExceptionCode.ERROR_NOT_FOUND, "회원 정보가 없습니다.");
+        });
+        return new MemberInfoResponse(member);
+    }
+
 
 }

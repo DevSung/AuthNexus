@@ -15,4 +15,6 @@ public interface MemberService {
     List<MemberInfoResponse> getUsers();
 
     JwtToken login(LoginRequest loginRequest);
+
+    MemberInfoResponse getUser(Long idx);
 }

@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -21,25 +20,27 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-        // 1. Request Header 에서 JWT 토큰 추출
-        String token = resolveToken(request);
+
+        // "api/member/login" 로그인 api는 토큰 검증을 수행하지 않고 통과시킴
+        if (request.getRequestURI().equals("/api/member/login") || request.getRequestURI().equals("/api/member/join")) {
+            chain.doFilter(request, response);
+            return;
+        }
+
+        if (request.getRequestURI().equals("/api/auth/refresh")) {
+            Authentication authentication = jwtTokenProvider.checkRefreshToken(request);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            chain.doFilter(request, response);
+            return;
+        }
 
         // 2. validateToken 으로 토큰 유효성 검사
-        if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
-            Authentication authentication = jwtTokenProvider.getAuthentication(token);
+        if (jwtTokenProvider.validateToken(request)) {
+            Authentication authentication = jwtTokenProvider.getAuthentication(request);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
-
         chain.doFilter(request, response);
-    }
 
-    // Request Header 에서 토큰 정보 추출
-    private String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {
-            return bearerToken.substring(7);
-        }
-        return null;
     }
 
 }

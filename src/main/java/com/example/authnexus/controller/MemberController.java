@@ -1,5 +1,6 @@
 package com.example.authnexus.controller;
 
+import com.example.authnexus.config.TokenUser;
 import com.example.authnexus.payload.LoginRequest;
 import com.example.authnexus.payload.SignUpRequest;
 import com.example.authnexus.payload.common.ResponseData;
@@ -31,9 +32,15 @@ public class MemberController {
     }
 
     @Operation(summary = "회원목록")
-    @GetMapping("")
+    @GetMapping("/list")
     public ResponseEntity<Object> getUsers() {
         return ResponseData.success(memberService.getUsers());
+    }
+
+    @Operation(summary = "회원조회")
+    @GetMapping("")
+    public ResponseEntity<Object> getUser(@TokenUser Long idx) {
+        return ResponseData.success(memberService.getUser(idx));
     }
 
 }

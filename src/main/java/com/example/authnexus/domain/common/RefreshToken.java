@@ -20,8 +20,8 @@ public class RefreshToken {
     @Column(name = "idx", nullable = false)
     private Long idx;
 
-    @Column(name = "user_Id", nullable = false)
-    private String userId;
+    @Column(name = "member_idx", nullable = false)
+    private Long memberIdx;
 
     @Column(name = "token", nullable = false)
     private String token;

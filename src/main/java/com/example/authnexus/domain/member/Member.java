@@ -12,6 +12,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@NamedEntityGraph(name = "roles", attributeNodes = @NamedAttributeNode("roles"))
 @Table(name = "member", schema = "user")
 public class Member extends BaseEntity {
 
