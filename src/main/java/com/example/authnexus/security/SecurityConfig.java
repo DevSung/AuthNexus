@@ -54,4 +54,9 @@ public class SecurityConfig {
                 .build();
     }
 
+    @Bean
+    public Argon2PasswordEncoder passwordEncoder() {
+        return new Argon2PasswordEncoder();
+    }
+
 }

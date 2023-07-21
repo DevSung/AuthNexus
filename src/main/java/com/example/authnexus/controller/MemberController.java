@@ -19,7 +19,7 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @Operation(summary = "회원가입")
+    @Operation(summary = "회원 가입")
     @PostMapping("/join")
     public ResponseEntity<Object> addUser(@RequestBody SignUpRequest signUpRequest) {
         return ResponseData.success(memberService.addUser(signUpRequest));
@@ -31,13 +31,13 @@ public class MemberController {
         return ResponseData.success(memberService.login(loginRequest));
     }
 
-    @Operation(summary = "회원목록")
+    @Operation(summary = "회원 목록")
     @GetMapping("/list")
     public ResponseEntity<Object> getUsers() {
         return ResponseData.success(memberService.getUsers());
     }
 
-    @Operation(summary = "회원조회")
+    @Operation(summary = "회원 조회")
     @GetMapping("")
     public ResponseEntity<Object> getUser(@TokenUser Long idx) {
         return ResponseData.success(memberService.getUser(idx));
