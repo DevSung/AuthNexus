@@ -11,10 +11,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TokenUser {
 
-//    @AliasFor("name")
-//    String value() default "";
-//
-//    @AliasFor("value")
-//    String name() default "";
+    @AliasFor("userId")
+    String userId() default "";
+
+    @AliasFor("role")
+    String role() default "";
 
 }
