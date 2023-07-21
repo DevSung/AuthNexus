@@ -33,6 +33,7 @@ jobs:
         key: ${{ secrets.SERVER_KEY }} # 서버의 SSH 개인 키
         script: |
             mkdir -p /home/sungsin/java_source
-            scp -i ${{ secrets.SERVER_KEY }} /build/libs/*.jar $sungsin@${{ secrets.SERVER_HOST }}:/home/sungsin/java_source
+            scp -i ${{ secrets.SERVER_KEY }} ./build/libs/*.jar sungsin@${{ secrets.SERVER_HOST }}:/home/sungsin/java_source
+
 
 
