@@ -16,10 +16,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up JDK 17
+    - name: Set up JDK 17 (OpenJDK)
       uses: actions/setup-java@v2
       with:
-        java-version: 'adopt@1.17'
+        java-version: '17'
+        distribution: 'adopt'
 
     - name: Build with Gradle
       run: ./gradlew bootJar
