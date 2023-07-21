@@ -26,6 +26,13 @@ jar {
     enabled = false
 }
 
+repositories {
+    mavenCentral()
+    maven {
+        url "https://repo.spring.io/milestone" // Spring Milestone Repository 추가
+    }
+}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -53,7 +60,6 @@ dependencies {
     // swagger
     implementation 'org.springdoc:springdoc-openapi-ui:1.6.15'
     implementation 'org.springdoc:springdoc-openapi-native:1.6.15'
-    implementation 'org.springframework.experimental:spring-native:0.12.1'
 }
 
 test {
