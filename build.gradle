@@ -53,6 +53,7 @@ dependencies {
     // swagger
     implementation 'org.springdoc:springdoc-openapi-ui:1.6.15'
     implementation 'org.springdoc:springdoc-openapi-native:1.6.15'
+    implementation 'org.springframework.experimental:spring-native:0.12.1'
 }
 
 test {

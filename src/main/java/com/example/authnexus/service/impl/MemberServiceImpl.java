@@ -12,10 +12,10 @@ import com.example.authnexus.payload.LoginRequest;
 import com.example.authnexus.payload.MemberInfoResponse;
 import com.example.authnexus.payload.SignUpRequest;
 import com.example.authnexus.security.JwtTokenProvider;
-import com.example.authnexus.security.SecurityConfig;
 import com.example.authnexus.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +34,7 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final MemberRoleRepository memberRoleRepository;
     private final JwtTokenProvider jwtTokenProvider;
-    private final SecurityConfig securityConfig;
+    private final Argon2PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -45,7 +45,7 @@ public class MemberServiceImpl implements MemberService {
         }
 
         // Argon2 알고리즘으로 패스워드 암호화
-        String encoderPassword = securityConfig.passwordEncoder().encode(signUpRequest.getPassword());
+        String encoderPassword = passwordEncoder.encode(signUpRequest.getPassword());
 
         // 회원 저장
         Member member = Member.builder()
@@ -110,7 +110,7 @@ public class MemberServiceImpl implements MemberService {
             throw new ApiResponseException(ExceptionCode.ERROR_NOT_FOUND, "아이디가 일치하지 않습니다.");
         });
 
-        if (!securityConfig.passwordEncoder().matches(loginRequest.getPassword(), member.getPassword())) {
+        if (!passwordEncoder.matches(loginRequest.getPassword(), member.getPassword())) {
             throw new ApiResponseException(ExceptionCode.ERROR_NOT_FOUND, "비밀번호가 일치하지 않습니다.");
         }
 

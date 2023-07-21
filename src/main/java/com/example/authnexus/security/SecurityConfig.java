@@ -1,6 +1,5 @@
 package com.example.authnexus.security;
 
-import com.example.authnexus.config.TokenUserResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +18,6 @@ public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final TokenUserResolver tokenUserResolver;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -54,11 +52,6 @@ public class SecurityConfig {
                 .and()
                 .addFilterBefore(new JwtFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .build();
-    }
-
-    @Bean
-    public Argon2PasswordEncoder passwordEncoder() {
-        return new Argon2PasswordEncoder();
     }
 
 }

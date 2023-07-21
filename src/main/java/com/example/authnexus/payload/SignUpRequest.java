@@ -1,17 +1,14 @@
 package com.example.authnexus.payload;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Getter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@Setter
 public class SignUpRequest {
 
     private String userId;
@@ -33,8 +30,7 @@ public class SignUpRequest {
     private List<Roles> rolesList;
 
     @Getter
-    @Builder
-    @NoArgsConstructor
+    @Setter
     @AllArgsConstructor
     public static class Roles {
         private String role;
