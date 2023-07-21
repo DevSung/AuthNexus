@@ -24,7 +24,11 @@ jobs:
 
     - name: Build with Gradle
       run: ./gradlew bootJar
-
+    - name: Debug Secrets
+      run: |
+        echo "SERVER_KEY: ${{ secrets.SERVER_KEY }}"
+        echo "SERVER_HOST: ${{ secrets.SERVER_HOST }}"
+        
     - name: Transfer Jar to Remote Server
       uses: appleboy/ssh-action@master
       with:
@@ -33,6 +37,7 @@ jobs:
         key: ${{ secrets.SERVER_KEY }} # 서버의 SSH 개인 키
         script: |
             ssh -i ${{ secrets.SERVER_KEY }} sungsin@${{ secrets.SERVER_HOST }} mkdir -p /home/sungsin/java_source
+            scp -i ${{ secrets.SERVER_KEY }} ./build/libs/*.jar sungsin@${{ secrets.SERVER_HOST }}:/home/sungsin/java_source
        
 
 
