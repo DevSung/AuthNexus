@@ -9,9 +9,7 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -21,6 +19,16 @@ jobs:
       with:
         java-version: '17'
         distribution: 'adopt'
+
+    - name: Gradle Caching
+      uses: actions/cache@v3
+      with:
+        path: |  
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+            ${{ runner.os }}-gradle-
 
     - name: Build with Gradle
       run: ./gradlew bootJar
@@ -33,15 +41,7 @@ jobs:
         key: ${{ secrets.SERVER_KEY }} # 서버의 SSH 개인 키
         source: "build/libs/*.jar"
         target: "/home/sungsin/java_source/"
-       
+
     - name: Run Jar on Remote Server
-      uses: appleboy/scp-action@master
-      with:
-        host: ${{ secrets.SERVER_HOST }} # 원격 서버 IP 주소
-        username: sungsin # 원격 서버 사용자 이름
-        key: ${{ secrets.SERVER_KEY }} # 서버의 SSH 개인 키
-        run: |
-          bash createJar.sh
-
-
-
+      run: |
+        bash createJar.sh prod
