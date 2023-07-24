@@ -26,6 +26,10 @@ jar {
     enabled = false
 }
 
+bootJar {
+    archiveFileName = "AuthNexus-0.0.1-SNAPSHOT.jar"
+}
+
 repositories {
     mavenCentral()
     maven {

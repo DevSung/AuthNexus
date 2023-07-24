@@ -12,25 +12,29 @@ elif [ "$PROFILE_GROUP" != "local" ] && [ "$PROFILE_GROUP" != "dev" ] && [ "$PRO
   exit 1
 fi
 
-# root
-ROOT_PATH=/home/sungsin/java_source
-
-SERVER_USER=sungsin
-SERVER_HOST=$SERVER_HOST
-SERVER_KEY=$SERVER_KEY
 PORT=8003
+# /home/sungsin/java_source 이동
+cd /home/sungsin/java_source
 
 # port 확인
-PID=$(ssh -i $SERVER_KEY $SERVER_USER@$SERVER_HOST "lsof -t -i :$PORT")
+PID=$(lsof -t -i :8003)
 
 if [ -n "$PID" ]; then
   echo "프로세스 $PID를 종료합니다."
-  ssh -i $SERVER_KEY $SERVER_USER@$SERVER_HOST "kill $PID"
+  kill $PID
   sleep 3
 fi
 
 if [ -z "$PID" ]; then
   # JAR 파일 실행
-  ssh -i $SERVER_KEY $SERVER_USER@$SERVER_HOST "java -jar build/libs/*.jar --spring.profiles.active=prod"
+  java -jar /deploy/*.jar --spring.profiles.active=prod
   echo "$PROFILE_GROUP jar 파일이 실행됐습니다."
+fi
+
+PID=$(lsof -t -i :8003)
+if [ -n "$PID" ]; then
+  echo "jar 파일이 실행됐습니다."
+else
+  echo "배포 실패: JAR 파일 실행 중 오류가 발생했습니다."
+  exit 1
 fi
