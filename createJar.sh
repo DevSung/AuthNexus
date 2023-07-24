@@ -16,25 +16,21 @@ fi
 ROOT_PATH=/home/sungsin/java_source
 
 SERVER_USER=sungsin
-SERVER_PATH=${{ secrets.SERVER_HOST }}
-SERVER_KEY=${{ secrets.SERVER_KEY }}
+SERVER_HOST=$SERVER_HOST
+SERVER_KEY=$SERVER_KEY
 PORT=8003
 
 # port 확인
-PID=$(ssh -i $SERVER_KEY $SERVER_USER@$SERVER_PATH "lsof -t -i :$PORT")
+PID=$(ssh -i $SERVER_KEY $SERVER_USER@$SERVER_HOST "lsof -t -i :$PORT")
 
 if [ -n "$PID" ]; then
   echo "프로세스 $PID를 종료합니다."
-  ssh -i $SERVER_KEY $SERVER_USER@$SERVER_PATH "kill $PID"
+  ssh -i $SERVER_KEY $SERVER_USER@$SERVER_HOST "kill $PID"
   sleep 3
 fi
 
-ssh -i $SERVER_KEY $SERVER_USER@$SERVER_PATH "java -jar build/libs/*.jar --spring.profiles.active=prod"
-echo "$PROFILE_GROUP jar 파일이 실행됐습니다."
-
-
-
-
-
-
-
+if [ -z "$PID" ]; then
+  # JAR 파일 실행
+  ssh -i $SERVER_KEY $SERVER_USER@$SERVER_HOST "java -jar build/libs/*.jar --spring.profiles.active=prod"
+  echo "$PROFILE_GROUP jar 파일이 실행됐습니다."
+fi
