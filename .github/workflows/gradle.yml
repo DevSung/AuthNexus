@@ -59,9 +59,17 @@ jobs:
           fi
 
           # JAR 파일 실행
-          if [ -z "$PID" ]; then
+          cd sungsin/java_source/
           java -jar build/libs/*.jar --spring.profiles.active=prod
-          echo "$PROFILE_GROUP jar 파일이 실행됐습니다."
+          
+          PID=$(lsof -t -i :8003)
+          if [ -n "$PID" ]; then
+            echo "jar 파일이 실행됐습니다."
+          else
+            echo "배포 실패: JAR 파일 실행 중 오류가 발생했습니다."
+            exit 1
           fi
+      
+
 
 
