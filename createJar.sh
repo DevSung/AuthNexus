@@ -27,7 +27,7 @@ if [ -n "$PID" ]; then
 fi
 
 # JAR 파일 실행
-nohup java -jar /deploy/*.jar --spring.profiles.active=prod &
+nohup java -jar /deploy/AuthNexus-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod &
 echo "$PROFILE_GROUP jar 파일이 실행됐습니다."
 
 PID=$(lsof -t -i :8003)
