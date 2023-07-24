@@ -33,10 +33,5 @@ jobs:
         target: "/home/sungsin/java_source/"
 
     - name: Run Jar on Remote Server
-    - uses: actions/checkout@v2
-      with:
-        host: ${{ secrets.SERVER_HOST }} # 원격 서버 IP 주소
-        username: sungsin # 원격 서버 사용자 이름
-        key: ${{ secrets.SERVER_KEY }} # 서버의 SSH 개인 키
-        run: |
-          bash createJar.sh
+      run: |
+        bash createJar.sh prod
