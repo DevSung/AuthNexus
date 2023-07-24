@@ -32,11 +32,6 @@ jobs:
 
     - name: Build with Gradle
       run: ./gradlew bootJar
-  
-    - name: Set jar file name as an environment variable
-      run: |
-        JAR_NAME=$(ls build/libs/*.jar | grep -o '[^/]*$')
-        echo "JAR_NAME=$JAR_NAME" >> $GITHUB_ENV
 
     - name: Transfer Jar to Remote Server
       uses: appleboy/scp-action@master
@@ -46,6 +41,11 @@ jobs:
         key: ${{ secrets.SERVER_KEY }} # 서버의 SSH 개인 키
         source: "build/libs/*.jar"
         target: "/home/sungsin/java_source/"
+
+    - name: Set Jar File Name
+      run: |
+        JAR_NAME=$(ls build/libs/*.jar | grep -o '[^/]*$')
+        echo "JAR_NAME=$JAR_NAME" >> $GITHUB_ENV
 
     - name: Deploy
       uses: appleboy/ssh-action@master
