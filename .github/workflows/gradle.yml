@@ -41,15 +41,7 @@ jobs:
         key: ${{ secrets.SERVER_KEY }} # 서버의 SSH 개인 키
         source: "build/libs/*.jar"
         target: "/home/sungsin/java_source/"
-
-    - name: Set Jar File Name
-      run: |
-        JAR_NAME=$(ls build/libs/*.jar | grep -o '[^/]*$')
-        echo "JAR_NAME=$JAR_NAME" >> $GITHUB_ENV
-
-    - name: Print jar file name
-      run: echo "The generated jar file name is $JAR_NAME"
-
+        
     - name: Deploy
       uses: appleboy/ssh-action@master
       with:
@@ -65,6 +57,9 @@ jobs:
             kill $PID
             sleep 3
           fi
+
+          # JAR 파일 이름 추출
+          JAR_NAME=$(ls build/libs/*.jar | grep -o '[^/]*$')
 
           # JAR 파일 실행
           JAR_PATH="/home/sungsin/java_source/build/libs/$JAR_NAME"
