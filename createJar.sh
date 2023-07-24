@@ -14,8 +14,6 @@ fi
 
 ROOT_PATH=/home/sungsin/java_source/deploy/
 PORT=8003
-# /home/sungsin/java_source 이동
-cd /home/sungsin/java_source
 
 # port 확인
 PID=$(lsof -t -i :8003)
@@ -29,6 +27,8 @@ fi
 # JAR 파일 실행
 nohup java -jar $ROOT_PATH/AuthNexus-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod &
 echo "$PROFILE_GROUP jar 파일이 실행됐습니다."
+
+sleep 5
 
 PID=$(lsof -t -i :8003)
 if [ -n "$PID" ]; then
