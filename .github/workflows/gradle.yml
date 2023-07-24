@@ -42,12 +42,6 @@ jobs:
         source: "build/libs/*.jar"
         target: "/home/sungsin/java_source/"
 
-    - name: Extract JAR file name
-      run: |
-        JAR_PATH=$(ls build/libs/*.jar)
-        echo "::set-output name=jar_path::$JAR_PATH"
-      id: get_jar_path
-
     - name: Deploy
       uses: appleboy/ssh-action@master
       with:
@@ -65,7 +59,7 @@ jobs:
           fi
 
           # JAR 파일 실행
-          JAR_PATH="${{ steps.get_jar_path.outputs.jar_path }}"
+          JAR_PATH="/home/sungsin/java_source/build/libs/*.jar"
           java -jar "$JAR_PATH" --spring.profiles.active=prod
           
           PID=$(lsof -t -i :8003)
