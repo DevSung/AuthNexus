@@ -45,9 +45,9 @@ jobs:
     - name: Deploy
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.REMOTE_IP }}
-        username: ${{ secrets.REMOTE_SSH_ID }}
-        key: ${{ secrets.REMOTE_SSH_KEY }}
+        host: ${{ secrets.SERVER_HOST }} # 원격 서버 IP 주소
+        username: sungsin
+        key: ${{ secrets.SERVER_KEY }} # 서버의 SSH 개인 키
         port: 22
         script: |
           # 프로세스 확인 및 종료
