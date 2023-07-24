@@ -6,6 +6,7 @@ import com.example.authnexus.domain.member.repository.MemberRoleRepository;
 import com.example.authnexus.payload.JwtToken;
 import com.example.authnexus.payload.LoginRequest;
 import com.example.authnexus.payload.MemberInfoResponse;
+import com.example.authnexus.payload.SignUpRequest;
 import com.example.authnexus.security.JwtTokenProvider;
 import com.example.authnexus.service.impl.MemberServiceImpl;
 import org.junit.jupiter.api.DisplayName;
@@ -18,8 +19,10 @@ import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -46,6 +49,22 @@ class MemberServiceTest {
 
     @InjectMocks
     MemberServiceImpl memberService;
+
+    @Test
+    @DisplayName("회원가입 테스트")
+    void addUser() {
+        // given
+        SignUpRequest signUpRequest = new SignUpRequest();
+        signUpRequest.setUserId("Testeeee");
+        signUpRequest.setPassword("1234");
+        signUpRequest.setRoles(new String[]{"USER"});
+
+        // when
+        Map<String, Object> result = memberService.addUser(signUpRequest);
+
+        // then
+        assertThat("USER").isEqualTo(result.get("role"));
+    }
 
     @Test
     @DisplayName("토큰 발급 테스트")

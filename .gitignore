@@ -27,9 +27,6 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 
-# .sh files
-*.sh
-
 ### NetBeans ###ll
 /nbproject/private/
 /nbbuild/
