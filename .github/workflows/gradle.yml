@@ -57,5 +57,6 @@ jobs:
         port: 22
         script: |
           chmod +x /home/sungsin/java_source/deploy/createJar.sh
-          nohup bash /home/sungsin/java_source/deploy/createJar.sh prod
+          nohup bash /home/sungsin/java_source/deploy/createJar.sh prod > AuthNexus.log 2>&1 &
+
           
