@@ -25,11 +25,9 @@ if [ -n "$PID" ]; then
   sleep 3
 fi
 
-if [ -z "$PID" ]; then
-  # JAR 파일 실행
-  java -jar /deploy/*.jar --spring.profiles.active=prod
-  echo "$PROFILE_GROUP jar 파일이 실행됐습니다."
-fi
+# JAR 파일 실행
+nohup java -jar /deploy/*.jar --spring.profiles.active=prod &
+echo "$PROFILE_GROUP jar 파일이 실행됐습니다."
 
 PID=$(lsof -t -i :8003)
 if [ -n "$PID" ]; then
