@@ -41,40 +41,25 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public Map<String, Object> addUser(SignUpRequest signUpRequest) {
 
-        if (memberRepository.existsByUserId(signUpRequest.getUserId())) {
-            throw new ValidationException("동일한 아이디가 존재합니다.");
-        }
+        validateUserId(signUpRequest.getUserId());
 
         // Argon2 알고리즘으로 패스워드 암호화
         String encoderPassword = passwordEncoder.encode(signUpRequest.getPassword());
 
         // 회원 저장
-        Member member = Member.builder()
-                .userId(signUpRequest.getUserId())
-                .password(encoderPassword)
-                .email(signUpRequest.getEmail())
-                .name(signUpRequest.getName())
-                .gender(signUpRequest.getGender())
-                .birthday(signUpRequest.getBirthday())
-                .addr(signUpRequest.getAddr())
-                .tel(signUpRequest.getTel())
-                .build();
-
+        Member member = signUpRequest.toEntity(encoderPassword);
         memberRepository.save(member);
-        memberRepository.flush();
 
         List<MemberRole> roles = new ArrayList<>();
 
         // 회원 권한 저장
-        if (!signUpRequest.getRolesList().isEmpty()) {
-            signUpRequest.getRolesList().forEach(r -> {
-                MemberRole role = MemberRole.builder()
-                        .member(member)
-                        .role(r.getRole())
-                        .build();
+        if (signUpRequest.getRoles().length > 0) {
+            for (String r : signUpRequest.getRoles()) {
+                MemberRole role = signUpRequest.toRoleEntity(member, r);
                 roles.add(role);
-            });
+            }
         }
+
         memberRoleRepository.saveAll(roles);
 
         Map<String, Object> map = new HashMap<>();
@@ -127,5 +112,12 @@ public class MemberServiceImpl implements MemberService {
         return new MemberInfoResponse(member);
     }
 
-
+    /**
+     * 아이디 중복 체크
+     */
+    private void validateUserId(String userId) {
+        if (memberRepository.existsByUserId(userId)) {
+            throw new ValidationException("동일한 아이디가 존재합니다.");
+        }
+    }
 }
