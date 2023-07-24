@@ -50,17 +50,18 @@ jobs:
         key: ${{ secrets.SERVER_KEY }} # 서버의 SSH 개인 키
         port: 22
         script: |
-          # 프로세스 확인 및 종료
           PID=$(lsof -t -i :8003)
           if [ -n "$PID" ]; then
             echo "프로세스 $PID를 종료합니다."
             kill $PID
-            sleep 3
+            sleep 5
           fi
+          
+          cd /home/sungsin/java_source
 
-          # JAR 파일 실행
-          JAR_PATH="/home/sungsin/java_source/build/libs/AuthNexus-0.0.1-SNAPSHOT.jar"
+          JAR_PATH="./build/libs/AuthNexus-0.0.1-SNAPSHOT.jar"
           java -jar "$JAR_PATH" --spring.profiles.active=prod
+          sleep 5
           
           PID=$(lsof -t -i :8003)
           if [ -n "$PID" ]; then
