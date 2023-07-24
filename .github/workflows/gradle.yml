@@ -20,7 +20,7 @@ jobs:
         java-version: '17'
         distribution: 'adopt'
 
-    - name: Gradle Caching
+    - name: Gradle Caching # Gradle 캐싱처리
       uses: actions/cache@v3
       with:
         path: |  
@@ -42,6 +42,24 @@ jobs:
         source: "build/libs/*.jar"
         target: "/home/sungsin/java_source/"
 
-    - name: Run Jar on Remote Server
-      run: |
-        bash createJar.sh prod
+    - name: Deploy
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.REMOTE_IP }}
+        username: ${{ secrets.REMOTE_SSH_ID }}
+        key: ${{ secrets.REMOTE_SSH_KEY }}
+        port: 22
+        script: |
+          # 프로세스 확인 및 종료
+          PID=$(lsof -t -i :8003)
+          if [ -n "$PID" ]; then
+            echo "프로세스 $PID를 종료합니다."
+            kill $PID
+            sleep 3
+          fi
+
+          # JAR 파일 실행
+          java -jar /home/sungsin/java_source/build/libs/*.jar --spring.profiles.active=prod
+          echo "$PROFILE_GROUP jar 파일이 실행됐습니다."
+
+
