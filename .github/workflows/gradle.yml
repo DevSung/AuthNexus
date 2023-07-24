@@ -59,7 +59,9 @@ jobs:
           fi
 
           # JAR 파일 실행
-          java -jar /home/sungsin/java_source/build/libs/*.jar --spring.profiles.active=prod
+          if [ -z "$PID" ]; then
+          java -jar build/libs/*.jar --spring.profiles.active=prod
           echo "$PROFILE_GROUP jar 파일이 실행됐습니다."
+          fi
 
 
