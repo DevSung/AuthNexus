@@ -41,7 +41,12 @@ jobs:
         key: ${{ secrets.SERVER_KEY }} # 서버의 SSH 개인 키
         source: "build/libs/*.jar"
         target: "/home/sungsin/java_source/"
-        
+    
+    - name: Set Jar File Name
+      run: |
+        JAR_NAME=$(ls build/libs/*.jar | grep -o '[^/]*$')
+        echo "JAR_NAME=$JAR_NAME" >> $GITHUB_ENV
+
     - name: Deploy
       uses: appleboy/ssh-action@master
       with:
@@ -49,6 +54,8 @@ jobs:
         username: sungsin
         key: ${{ secrets.SERVER_KEY }} # 서버의 SSH 개인 키
         port: 22
+      env: 
+        JAR_NAME: ${{ env.JAR_NAME }}
         script: |
           # 프로세스 확인 및 종료
           PID=$(lsof -t -i :8003)
