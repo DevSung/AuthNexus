@@ -64,7 +64,7 @@ jobs:
           fi
 
           # JAR 파일 실행
-          JAR_PATH="/home/sungsin/java_source/build/libs/$JAR_NAME.jar"
+          JAR_PATH="/home/sungsin/java_source/build/libs/$JAR_NAME"
           java -jar "$JAR_PATH" --spring.profiles.active=prod
           
           PID=$(lsof -t -i :8003)
