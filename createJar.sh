@@ -12,6 +12,7 @@ elif [ "$PROFILE_GROUP" != "local" ] && [ "$PROFILE_GROUP" != "dev" ] && [ "$PRO
   exit 1
 fi
 
+ROOT_PATH=/home/sungsin/java_source/deploy/
 PORT=8003
 # /home/sungsin/java_source 이동
 cd /home/sungsin/java_source

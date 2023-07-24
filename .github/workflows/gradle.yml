@@ -57,5 +57,5 @@ jobs:
         port: 22
         script: |
           chmod +x /home/sungsin/java_source/deploy/createJar.sh
-          bash /home/sungsin/java_source/depoly/createJar.sh
+          bash /home/sungsin/java_source/deploy/createJar.sh prod
           
