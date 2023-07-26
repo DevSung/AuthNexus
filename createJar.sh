@@ -16,7 +16,7 @@ ROOT_PATH=/home/sungsin/java_source/deploy/
 PORT=8003
 
 # /home/sungsin/java_source 이동
-cd /home/sungsin/java_source
+cd /home/sungsin/java_source/deploy
 
 # port 확인
 PID=$(lsof -t -i :8003)
