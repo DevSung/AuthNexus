@@ -17,15 +17,8 @@ ROOT_PATH=/home/sungsin/java_source/deploy/
 # /home/sungsin/java_source 이동
 cd /home/sungsin/java_source
 
-# Port 설정
-if [ "$PROFILE_GROUP" = "prod" ]; then
-  PORT=443
-else
-  PORT=8003
-fi
-
 # port 확인
-PID=$(sudo lsof -t -i :$PORT)
+PID=$(sudo lsof -t -i :8003)
 
 if [ -n "$PID" ]; then
   echo "프로세스 $PID를 종료합니다."
