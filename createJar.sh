@@ -34,5 +34,5 @@ if [ -n "$PID" ]; then
 fi
 
 # JAR 파일 실행
-nohup java -jar $ROOT_PATH/AuthNexus-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod &
+nohup sudo java -jar $ROOT_PATH/AuthNexus-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod &
 echo "$PROFILE_GROUP jar 파일이 실행됐습니다."
