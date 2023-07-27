@@ -25,11 +25,11 @@ else
 fi
 
 # port 확인
-PID=$(lsof -t -i :$PORT)
+PID=$(sudo lsof -t -i :$PORT)
 
 if [ -n "$PID" ]; then
   echo "프로세스 $PID를 종료합니다."
-  kill $PID
+  sudo kill $PID
   sleep 3
 fi
 
