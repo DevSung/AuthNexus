@@ -31,7 +31,7 @@ fi
 nohup java -jar $ROOT_PATH/AuthNexus-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod &
 echo "$PROFILE_GROUP jar 파일이 실행됐습니다."
 
-sleep 5
+sleep 10
 
 PID=$(lsof -t -i :8003)
 if [ -n "$PID" ]; then
