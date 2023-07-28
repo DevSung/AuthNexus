@@ -22,7 +22,10 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
 
         // "api/member/login" 로그인 api는 토큰 검증을 수행하지 않고 통과시킴
-        if (request.getRequestURI().equals("/api/member/login") || request.getRequestURI().equals("/api/member/join")) {
+        if (request.getRequestURI().equals("/api/member/login") ||
+            request.getRequestURI().equals("/api/member/join") ||
+            request.getRequestURI().equals("/swagger-ui/**")
+        ) {
             chain.doFilter(request, response);
             return;
         }

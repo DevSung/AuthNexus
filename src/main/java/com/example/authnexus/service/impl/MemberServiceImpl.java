@@ -64,7 +64,6 @@ public class MemberServiceImpl implements MemberService {
 
         Map<String, Object> map = new HashMap<>();
         map.put("id", member.getUserId());
-        map.put("pw", member.getPassword());
         map.put("role", roles.stream().map(MemberRole::getRole).collect(Collectors.joining(",")));
 
         return map;
