@@ -1,9 +1,6 @@
 package com.example.authnexus.service;
 
-import com.example.authnexus.payload.JwtToken;
-import com.example.authnexus.payload.LoginRequest;
-import com.example.authnexus.payload.MemberInfoResponse;
-import com.example.authnexus.payload.SignUpRequest;
+import com.example.authnexus.payload.*;
 
 import java.util.List;
 import java.util.Map;
@@ -17,4 +14,6 @@ public interface MemberService {
     JwtToken login(LoginRequest loginRequest);
 
     MemberInfoResponse getUser(Long idx);
+
+    Boolean updateGender(MemberUpdateRequest request);
 }

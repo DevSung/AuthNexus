@@ -2,6 +2,7 @@ package com.example.authnexus.controller;
 
 import com.example.authnexus.config.TokenUser;
 import com.example.authnexus.payload.LoginRequest;
+import com.example.authnexus.payload.MemberUpdateRequest;
 import com.example.authnexus.payload.SignUpRequest;
 import com.example.authnexus.payload.common.ResponseData;
 import com.example.authnexus.service.MemberService;
@@ -41,6 +42,12 @@ public class MemberController {
     @GetMapping("")
     public ResponseEntity<Object> getUser(@TokenUser Long idx) {
         return ResponseData.success(memberService.getUser(idx));
+    }
+
+    @Operation(summary = "kafka 테스트 업데이트")
+    @PutMapping("/gender")
+    public ResponseEntity<Object> updateGender(@RequestBody MemberUpdateRequest request) {
+        return ResponseData.success(memberService.updateGender(request));
     }
 
 }

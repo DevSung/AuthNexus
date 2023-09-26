@@ -1,26 +1,21 @@
 package com.example.authnexus.service.impl;
 
-
+import com.example.authnexus.config.kafka.KafkaProducer;
 import com.example.authnexus.domain.member.Member;
 import com.example.authnexus.domain.member.MemberRole;
 import com.example.authnexus.domain.member.repository.MemberRepository;
 import com.example.authnexus.domain.member.repository.MemberRoleRepository;
 import com.example.authnexus.exception.ApiResponseException;
 import com.example.authnexus.exception.ExceptionCode;
-import com.example.authnexus.payload.JwtToken;
-import com.example.authnexus.payload.LoginRequest;
-import com.example.authnexus.payload.MemberInfoResponse;
-import com.example.authnexus.payload.SignUpRequest;
+import com.example.authnexus.payload.*;
 import com.example.authnexus.security.JwtTokenProvider;
 import com.example.authnexus.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.ValidationException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +31,7 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRoleRepository memberRoleRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final Argon2PasswordEncoder passwordEncoder;
+    private final KafkaProducer kafkaProducer;
 
     @Override
     @Transactional
@@ -111,12 +107,25 @@ public class MemberServiceImpl implements MemberService {
         return new MemberInfoResponse(member);
     }
 
+    @Override
+    @Transactional
+    public Boolean updateGender(MemberUpdateRequest request) {
+       memberRepository.findById(request.getIdx()).orElseThrow(() -> {
+            throw new ApiResponseException(ExceptionCode.ERROR_NOT_FOUND, "회원 정보가 없습니다.");
+        });
+
+        /* send this kafkaStudy  */
+        kafkaProducer.send("my-topic-member", request);
+
+        return true;
+    }
+
     /**
      * 아이디 중복 체크
      */
     private void validateUserId(String userId) {
         if (memberRepository.existsByUserId(userId)) {
-            throw new ValidationException("동일한 아이디가 존재합니다.");
+            throw new ApiResponseException(ExceptionCode.ERROR_BAD_REQUEST, "동일한 아이디가 존재합니다.");
         }
     }
 }
