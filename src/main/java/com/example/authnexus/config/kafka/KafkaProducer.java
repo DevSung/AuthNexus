@@ -14,15 +14,18 @@ import org.springframework.stereotype.Service;
 public class KafkaProducer {
 
     private final KafkaTemplate<String, String> kafkaTemplate;
-    private final ObjectMapper mapper;
 
     public void send(String topic, MemberUpdateRequest request) {
         try {
+            ObjectMapper mapper = new ObjectMapper();
+
             String jsonInString = mapper.writeValueAsString(request);
             kafkaTemplate.send(topic, jsonInString);
             log.info("Kafka Producer sent data from the KafkaStudy service: {}", request);
+
         } catch (JsonProcessingException exception) {
             log.error("Error serializing the message: {}", exception.getMessage(), exception);
         }
     }
+
 }
