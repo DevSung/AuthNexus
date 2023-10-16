@@ -1,7 +1,9 @@
 package com.example.authnexus.service.impl;
 
-import com.example.authnexus.domain.member.Member;
-import com.example.authnexus.domain.member.repository.MemberRepository;
+import com.example.authnexus.domain.entity.Member;
+import com.example.authnexus.domain.repository.MemberRepository;
+import com.example.authnexus.exception.ApiResponseException;
+import com.example.authnexus.exception.ExceptionCode;
 import com.example.authnexus.payload.JwtToken;
 import com.example.authnexus.security.JwtTokenProvider;
 import com.example.authnexus.service.AuthService;
@@ -11,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,10 +24,23 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public JwtToken refreshToken(HttpServletRequest request) {
-        Authentication authentication = jwtTokenProvider.checkRefreshToken(request);
-        Optional<Member> member = memberRepository.findById(Long.valueOf(authentication.getName()));
 
-        return member.map(jwtTokenProvider::generateToken).orElse(null);
+        String accessToken = request.getHeader("Authorization");
+
+        if (accessToken == null) {
+            throw new ApiResponseException(ExceptionCode.ERROR_BAD_REQUEST, "PLEASE_PASS_ON_THE_TOKEN_INFORMATION");
+        }
+
+        Authentication authentication = jwtTokenProvider.checkRefreshToken(request);
+
+        Member member = memberRepository.findById(Long.valueOf(authentication.getName())).orElseThrow(() -> {
+            throw new ApiResponseException(ExceptionCode.ERROR_NOT_FOUND, "NOT_FOUND_MEMBER_INFORMATION");
+        });
+
+        JwtToken newToken = jwtTokenProvider.generateToken(member);
+        jwtTokenProvider.deleteRefreshToken(accessToken);
+
+        return newToken;
     }
 
 }

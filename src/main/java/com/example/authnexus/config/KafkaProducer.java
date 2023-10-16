@@ -1,4 +1,4 @@
-package com.example.authnexus.config.kafka;
+package com.example.authnexus.config;
 
 import com.example.authnexus.payload.MemberUpdateRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;

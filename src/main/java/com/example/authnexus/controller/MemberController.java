@@ -32,6 +32,12 @@ public class MemberController {
         return ResponseData.success(memberService.login(loginRequest));
     }
 
+    @Operation(summary = "로그아웃")
+    @GetMapping("/logout")
+    public ResponseEntity<Object> logout(@TokenUser Long idx) {
+        return ResponseData.success(memberService.logout(idx));
+    }
+
     @Operation(summary = "회원 목록")
     @GetMapping("/list")
     public ResponseEntity<Object> getUsers() {

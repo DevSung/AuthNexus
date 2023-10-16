@@ -1,10 +1,9 @@
 package com.example.authnexus.security;
 
-import com.example.authnexus.domain.common.RefreshToken;
-import com.example.authnexus.domain.common.repository.RefreshTokenRepository;
-import com.example.authnexus.domain.member.Member;
-import com.example.authnexus.domain.member.MemberRole;
-import com.example.authnexus.domain.member.repository.MemberRepository;
+import com.example.authnexus.config.RedisUtil;
+import com.example.authnexus.domain.entity.Member;
+import com.example.authnexus.domain.entity.MemberRole;
+import com.example.authnexus.domain.repository.MemberRepository;
 import com.example.authnexus.exception.ApiResponseException;
 import com.example.authnexus.exception.ExceptionCode;
 import com.example.authnexus.payload.JwtToken;
@@ -34,19 +33,19 @@ import java.util.stream.Collectors;
 @Component
 public class JwtTokenProvider {
 
-    private final RefreshTokenRepository refreshTokenRepository;
     private final MemberRepository memberRepository;
+    private final RedisUtil redisUtil;
 
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30; // 30분
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;  // 7일
 
     private final Key key;
 
-    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey, RefreshTokenRepository refreshTokenRepository, MemberRepository memberRepository) {
+    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey, MemberRepository memberRepository, RedisUtil redisUtil) {
         this.memberRepository = memberRepository;
+        this.redisUtil = redisUtil;
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
-        this.refreshTokenRepository = refreshTokenRepository;
     }
 
     /**
@@ -60,21 +59,22 @@ public class JwtTokenProvider {
         // Access Token 생성
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
         String accessToken = Jwts.builder()
+                .setExpiration(accessTokenExpiresIn)
                 .setSubject(String.valueOf(member.getIdx()))
                 .claim("auth", authorities)
-                .setExpiration(accessTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
 
         // Refresh Token 생성
+        Date refreshTokenExpiresIn = new Date(now + REFRESH_TOKEN_EXPIRE_TIME);
         String refreshToken = Jwts.builder()
-                .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
+                .setExpiration(refreshTokenExpiresIn)
                 .setSubject(String.valueOf(member.getIdx()))
                 .claim("auth", authorities)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
 
-        addRefreshToken(member, refreshToken);
+        redisUtil.setDataExpire(accessToken, refreshToken, refreshTokenExpiresIn.getTime());
 
         return JwtToken.builder()
                 .grantType("Bearer")
@@ -128,30 +128,23 @@ public class JwtTokenProvider {
     }
 
     /**
-     * 리프레쉬 토큰 저장
-     */
-    private void addRefreshToken(Member member, String refreshToken) {
-        if (refreshTokenRepository.existsByMemberIdx(member.getIdx())) {
-            refreshTokenRepository.deleteByMemberIdx(member.getIdx());
-        }
-        RefreshToken token = RefreshToken.builder()
-                .memberIdx(member.getIdx())
-                .token(refreshToken)
-                .build();
-
-        refreshTokenRepository.save(token);
-    }
-
-    /**
      * 리프레쉬 토큰 검증
      */
     public Authentication checkRefreshToken(HttpServletRequest request) {
         String token = resolveToken(request);
+        String refreshToken = request.getHeader("refreshToken");
+
+        if (refreshToken == null) {
+            throw new ApiResponseException(ExceptionCode.ERROR_NOT_FOUND, "NOT FOUND REFRESH TOKEN.");
+        }
 
         // 토큰 복호화
         Claims claims = parseClaims(token);
 
-        if (!refreshTokenRepository.existsByMemberIdxAndToken(Long.valueOf(claims.getSubject()), token)) {
+        String redisToken = redisUtil.getToken(token);
+        if (redisToken == null) {
+            throw new ApiResponseException(ExceptionCode.ERROR_ACCESS_DENIED, "유효하지 않은 토큰입니다.");
+        } else if (!refreshToken.equals(redisToken)) {
             throw new ApiResponseException(ExceptionCode.ERROR_ACCESS_DENIED, "유효하지 않은 토큰입니다.");
         }
 
@@ -168,6 +161,10 @@ public class JwtTokenProvider {
         UserDetails principal = new User(claims.getSubject(), "", getAuthorities(claims));
 
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+    }
+
+    public void deleteRefreshToken(String token) {
+        redisUtil.deleteToken(token.substring(7));
     }
 
     /**

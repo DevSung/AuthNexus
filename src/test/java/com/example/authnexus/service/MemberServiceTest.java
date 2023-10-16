@@ -1,8 +1,8 @@
 package com.example.authnexus.service;
 
-import com.example.authnexus.domain.member.Member;
-import com.example.authnexus.domain.member.repository.MemberRepository;
-import com.example.authnexus.domain.member.repository.MemberRoleRepository;
+import com.example.authnexus.domain.entity.Member;
+import com.example.authnexus.domain.repository.MemberRepository;
+import com.example.authnexus.domain.repository.MemberRoleRepository;
 import com.example.authnexus.payload.JwtToken;
 import com.example.authnexus.payload.LoginRequest;
 import com.example.authnexus.payload.SignUpRequest;
@@ -21,14 +21,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.in;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 

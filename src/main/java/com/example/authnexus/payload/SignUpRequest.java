@@ -1,7 +1,7 @@
 package com.example.authnexus.payload;
 
-import com.example.authnexus.domain.member.Member;
-import com.example.authnexus.domain.member.MemberRole;
+import com.example.authnexus.domain.entity.Member;
+import com.example.authnexus.domain.entity.MemberRole;
 import lombok.*;
 
 import java.time.LocalDate;

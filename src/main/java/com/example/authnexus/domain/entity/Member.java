@@ -1,6 +1,5 @@
-package com.example.authnexus.domain.member;
+package com.example.authnexus.domain.entity;
 
-import com.example.authnexus.domain.common.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;

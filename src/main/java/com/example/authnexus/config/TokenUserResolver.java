@@ -2,6 +2,7 @@ package com.example.authnexus.config;
 
 import com.example.authnexus.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,9 +32,9 @@ public class TokenUserResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter,
+    public Object resolveArgument(@NotNull MethodParameter parameter,
                                   ModelAndViewContainer mavContainer,
-                                  NativeWebRequest webRequest,
+                                  @NotNull NativeWebRequest webRequest,
                                   WebDataBinderFactory binderFactory) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();

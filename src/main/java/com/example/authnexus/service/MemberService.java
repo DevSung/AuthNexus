@@ -13,7 +13,10 @@ public interface MemberService {
 
     JwtToken login(LoginRequest loginRequest);
 
+    Boolean logout(Long idx);
+
     MemberInfoResponse getUser(Long idx);
 
     Boolean updateGender(MemberUpdateRequest request);
+
 }

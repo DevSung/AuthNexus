@@ -1,10 +1,10 @@
 package com.example.authnexus.service.impl;
 
-import com.example.authnexus.config.kafka.KafkaProducer;
-import com.example.authnexus.domain.member.Member;
-import com.example.authnexus.domain.member.MemberRole;
-import com.example.authnexus.domain.member.repository.MemberRepository;
-import com.example.authnexus.domain.member.repository.MemberRoleRepository;
+import com.example.authnexus.config.KafkaProducer;
+import com.example.authnexus.domain.entity.Member;
+import com.example.authnexus.domain.entity.MemberRole;
+import com.example.authnexus.domain.repository.MemberRepository;
+import com.example.authnexus.domain.repository.MemberRoleRepository;
 import com.example.authnexus.exception.ApiResponseException;
 import com.example.authnexus.exception.ExceptionCode;
 import com.example.authnexus.payload.*;
@@ -99,6 +99,14 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @Transactional
+    public Boolean logout(Long idx) {
+
+
+        return null;
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public MemberInfoResponse getUser(Long idx) {
         Member member = memberRepository.findById(idx).orElseThrow(() -> {
@@ -110,7 +118,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public Boolean updateGender(MemberUpdateRequest request) {
-       memberRepository.findById(request.getIdx()).orElseThrow(() -> {
+        memberRepository.findById(request.getIdx()).orElseThrow(() -> {
             throw new ApiResponseException(ExceptionCode.ERROR_NOT_FOUND, "회원 정보가 없습니다.");
         });
 
